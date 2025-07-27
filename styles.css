@@ -1,21 +1,28 @@
+body {
+    background-color: #FAFAFA
+}
+
 .circle {
-    border: 1.5px solid black;
+    border: 1.5px solid #121212;
     border-radius: 50%;
     position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    color: #121212
 }
 
 .right-half-circle {
-    border: 1px solid black;
+    border: 1px solid #121212;
     border-radius: 50%;
     position: absolute;
     clip-path: inset(0 0 0 50%);
 }
 
 .left-half-circle {
-    border: 1px solid black;
+    border: 1px solid #121212;
     border-radius: 50%;
     position: absolute;
     clip-path: inset(0 50% 0 0);

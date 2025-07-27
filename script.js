@@ -131,9 +131,9 @@ try {
 let sortedNodes = topologicalSort(edges);
 const centerX = document.documentElement.clientWidth / 2;
 for (let i = 0; i < sortedNodes.length; i++) {
-    const r = 20;
+    const r = 25;
     const x = centerX;
-    const gap = 20;
+    const gap = 30;
     const y = (i > 0 ? sortedNodes[i - 1].y : 0) + 2 * r + gap;
     const node = createNode(x, y, r, sortedNodes[i]);
     sortedNodes[i] = node;
