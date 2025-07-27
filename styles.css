@@ -16,7 +16,8 @@ body {
     align-items: center;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 16px;
-    color: #121212
+    color: #121212;
+    background-color: #FAFAFA;
 }
 
 .right-half-circle {
