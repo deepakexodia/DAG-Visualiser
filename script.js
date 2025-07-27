@@ -99,15 +99,33 @@ function topologicalSort(edges) {
     return result.reverse(); // reverse for topological order
 }
 
-let edges = [
-    ["a", "b", true],
-    ["a", "c", true],
-    ["a", "d", false],
-    ["b", "d", true],
-    ["b", "d", false],
-    ["c", "d", true],
-    ["c", "d", false]
-];
+let edges = [];
+
+const jsonString =
+    '{"START":{"nextAction":{"approved":["DOC_VALIDATION_COE"]},"executionCondition":[]},"DOC_VALIDATION_COE":{"nextAction":{"approved":["LIVENESS_COE","SPOOF_COE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"START","value":"approved"}]},"LIVENESS_COE":{"nextAction":{"approved":["MILESTONE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"DOC_VALIDATION_COE","value":"approved"}]},"SPOOF_COE":{"nextAction":{"approved":["FRS_COE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"DOC_VALIDATION_COE","value":"approved"}]},"FRS_COE":{"nextAction":{"approved":["MILESTONE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"SPOOF_COE","value":"approved"}]},"MILESTONE":{"nextAction":{"approved":["BILLING"]},"executionCondition":[{"type":"or","conditions":[{"type":"and","conditions":[{"type":"eq","key":"LIVENESS_COE","value":"approved"},{"type":"eq","key":"FRS_COE","value":"approved"}]},{"type":"eq","key":"LIVENESS_COE","value":"rejected"},{"type":"eq","key":"SPOOF_COE","value":"rejected"},{"type":"eq","key":"FRS_COE","value":"rejected"},{"type":"eq","key":"DOC_VALIDATION_COE","value":"rejected"}]}]},"BILLING":{"nextAction":{"approved":["FINISH"]},"executionCondition":[{"type":"eq","key":"MILESTONE","value":"approved"}]},"FINISH":{"nextAction":{},"executionCondition":[{"type":"or","conditions":[{"type":"eq","key":"BILLING","value":"approved"}]}]}}';
+try {
+    const json = JSON.parse(jsonString);
+    for (let n1 in json) {
+        let approvedArr = json[n1]?.nextAction?.approved;
+        let rejectedArr = json[n1]?.nextAction?.rejected;
+        console.log("node: " + n1);
+        console.log("approved array: " + approvedArr);
+        console.log("rejected array: " + rejectedArr);
+        console.log(approvedArr?.length);
+        if (approvedArr?.length) {
+            for (let i = 0; i < approvedArr.length; i++) {
+                edges.push([n1, approvedArr[i], true]);
+            }
+        }
+        if (rejectedArr?.length) {
+            for (let i = 0; i < rejectedArr.length; i++) {
+                edges.push([n1, rejectedArr[i], false]);
+            }
+        }
+    }
+} catch (e) {
+    console.error("Invalid JSON:", e.message);
+}
 
 //draw nodes
 let sortedNodes = topologicalSort(edges);
@@ -124,8 +142,10 @@ for (let i = 0; i < sortedNodes.length; i++) {
 
 //draw edges
 for (let i = 0; i < edges.length; i++) {
-    const n1 = sortedNodes.find((n) => n.txt === edges[i][0]);
-    const n2 = sortedNodes.find((n) => n.txt === edges[i][1]);
+    const n1txt = edges[i][0];
+    const n2txt = edges[i][1];
+    const n1 = sortedNodes.find((n) => n.txt === n1txt);
+    const n2 = sortedNodes.find((n) => n.txt === n2txt);
     const direction = edges[i][2];
     const edge = createEdge(n1.x, n1.y, n2.x, n2.y, direction);
     edges[i] = edge;
