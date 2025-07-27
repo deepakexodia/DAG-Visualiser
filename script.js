@@ -70,6 +70,46 @@ const edgeProto = {
     }
 };
 
+const edgeProto1 = {
+    x1: 0,
+    y1: 0,
+    txt1: "",
+    x2: 0,
+    y2: 0,
+    txt2: "",
+    direction: false,
+    arc: document.createElement("div"),
+    node1: document.createElement("div"),
+    node2: document.createElement("div"),
+    draw: function () {
+        //draw arc
+        {
+            const x = Math.abs(x1 - x2) / 2;
+            const y = Math.abs(y1 - y2) / 2;
+            const r = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
+            arc.classList.add(this.direction ? "right-half-circle" : "left-half-circle");
+            arc.style.height = `${2 * r}px`;
+            arc.style.width = `${2 * r}px`;
+            arc.style.left = `${x - r}px`;
+            arc.style.top = `${y - r}px`;
+        }
+        //draw nodes
+        {
+            const r = 20;
+            const z = 1;
+            node1.classList.add("circle");
+            node2.classList.add("circle");
+            node1.style.height = node2.style.height = `${2 * r}px`;
+            node1.style.width = node2.style.width = `${2 * r}px`;
+            node1.style.left = node2.style.left = `${x - r}px`;
+            node1.style.top = node2.style.top = `${y - r}px`;
+            node1.style.zIndex = node2.style.zIndex = z;
+            node1.textContent = txt1;
+            node2.textContent = txt2;
+        }
+    }
+};
+
 function topologicalSort(edges) {
     const graph = {};
 
@@ -114,6 +154,17 @@ function topologicalSort(edges) {
 }
 
 const centerX = document.documentElement.clientWidth / 2;
+
+let edges = [
+    ["a", "b", true],
+    ["a", "c", true],
+    ["a", "d", false],
+    ["b", "d", true],
+    ["b", "d", false],
+    ["c", "d", true],
+    ["c", "d", false]
+];
+
 let nodes = [];
 ["a", "b", "c", "d"].forEach((txt) => {
     let node = Object.create(proto);
@@ -132,7 +183,6 @@ for (let i = 0; i < nodes.length; i++) {
     node.draw();
 }
 
-let edges = [];
 [
     [nodes[0], nodes[1], true],
     [nodes[0], nodes[2], true],
