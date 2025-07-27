@@ -2,6 +2,11 @@ body {
     background-color: #FAFAFA
 }
 
+#dagJsonInput {
+    width: 170px;
+    height: 50px;
+}
+
 .circle {
     border: 1.5px solid #121212;
     border-radius: 50%;

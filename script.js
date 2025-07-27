@@ -99,55 +99,52 @@ function topologicalSort(edges) {
     return result.reverse(); // reverse for topological order
 }
 
-let edges = [];
+function generateDagDiagram() {
+    let jsonString = document.getElementById("dagJsonInput").value;
+    let edges = [];
 
-const jsonString =
-    '{"START":{"nextAction":{"approved":["DOC_VALIDATION_COE"]},"executionCondition":[]},"DOC_VALIDATION_COE":{"nextAction":{"approved":["LIVENESS_COE","SPOOF_COE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"START","value":"approved"}]},"LIVENESS_COE":{"nextAction":{"approved":["MILESTONE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"DOC_VALIDATION_COE","value":"approved"}]},"SPOOF_COE":{"nextAction":{"approved":["FRS_COE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"DOC_VALIDATION_COE","value":"approved"}]},"FRS_COE":{"nextAction":{"approved":["MILESTONE"],"rejected":["MILESTONE"]},"executionCondition":[{"type":"eq","key":"SPOOF_COE","value":"approved"}]},"MILESTONE":{"nextAction":{"approved":["BILLING"]},"executionCondition":[{"type":"or","conditions":[{"type":"and","conditions":[{"type":"eq","key":"LIVENESS_COE","value":"approved"},{"type":"eq","key":"FRS_COE","value":"approved"}]},{"type":"eq","key":"LIVENESS_COE","value":"rejected"},{"type":"eq","key":"SPOOF_COE","value":"rejected"},{"type":"eq","key":"FRS_COE","value":"rejected"},{"type":"eq","key":"DOC_VALIDATION_COE","value":"rejected"}]}]},"BILLING":{"nextAction":{"approved":["FINISH"]},"executionCondition":[{"type":"eq","key":"MILESTONE","value":"approved"}]},"FINISH":{"nextAction":{},"executionCondition":[{"type":"or","conditions":[{"type":"eq","key":"BILLING","value":"approved"}]}]}}';
-try {
-    const json = JSON.parse(jsonString);
-    for (let n1 in json) {
-        let approvedArr = json[n1]?.nextAction?.approved;
-        let rejectedArr = json[n1]?.nextAction?.rejected;
-        console.log("node: " + n1);
-        console.log("approved array: " + approvedArr);
-        console.log("rejected array: " + rejectedArr);
-        console.log(approvedArr?.length);
-        if (approvedArr?.length) {
-            for (let i = 0; i < approvedArr.length; i++) {
-                edges.push([n1, approvedArr[i], true]);
+    try {
+        const json = JSON.parse(jsonString);
+        for (let n1 in json) {
+            let approvedArr = json[n1]?.nextAction?.approved;
+            let rejectedArr = json[n1]?.nextAction?.rejected;
+            if (approvedArr?.length) {
+                for (let i = 0; i < approvedArr.length; i++) {
+                    edges.push([n1, approvedArr[i], true]);
+                }
+            }
+            if (rejectedArr?.length) {
+                for (let i = 0; i < rejectedArr.length; i++) {
+                    edges.push([n1, rejectedArr[i], false]);
+                }
             }
         }
-        if (rejectedArr?.length) {
-            for (let i = 0; i < rejectedArr.length; i++) {
-                edges.push([n1, rejectedArr[i], false]);
-            }
-        }
+    } catch (e) {
+        alert("Invalid JSON:", e.message);
     }
-} catch (e) {
-    console.error("Invalid JSON:", e.message);
-}
 
-//draw nodes
-let sortedNodes = topologicalSort(edges);
-const centerX = document.documentElement.clientWidth / 2;
-for (let i = 0; i < sortedNodes.length; i++) {
-    const r = 25;
-    const x = centerX;
-    const gap = 30;
-    const y = (i > 0 ? sortedNodes[i - 1].y : 0) + 2 * r + gap;
-    const node = createNode(x, y, r, sortedNodes[i]);
-    sortedNodes[i] = node;
-    node.draw();
-}
+    //draw nodes
+    let sortedNodes = topologicalSort(edges);
+    const centerX = document.documentElement.clientWidth / 2;
+    for (let i = 0; i < sortedNodes.length; i++) {
+        const r = 25;
+        const x = centerX;
+        const gap = 30;
+        const y = (i > 0 ? sortedNodes[i - 1].y : 0) + 2 * r + gap;
+        const node = createNode(x, y, r, sortedNodes[i]);
+        sortedNodes[i] = node;
+        node.draw();
+    }
 
-//draw edges
-for (let i = 0; i < edges.length; i++) {
-    const n1txt = edges[i][0];
-    const n2txt = edges[i][1];
-    const n1 = sortedNodes.find((n) => n.txt === n1txt);
-    const n2 = sortedNodes.find((n) => n.txt === n2txt);
-    const direction = edges[i][2];
-    const edge = createEdge(n1.x, n1.y, n2.x, n2.y, direction);
-    edges[i] = edge;
-    edge.draw();
+    //draw edges
+    for (let i = 0; i < edges.length; i++) {
+        const n1txt = edges[i][0];
+        const n2txt = edges[i][1];
+        const n1 = sortedNodes.find((n) => n.txt === n1txt);
+        const n2 = sortedNodes.find((n) => n.txt === n2txt);
+        const direction = edges[i][2];
+        const edge = createEdge(n1.x, n1.y, n2.x, n2.y, direction);
+        edges[i] = edge;
+        edge.draw();
+    }
 }
