@@ -101,6 +101,8 @@ function topologicalSort(edges) {
 
 function generateDagDiagram() {
     let jsonString = document.getElementById("dagJsonInput").value;
+    document.getElementById("dagJsonInput").remove();
+    document.getElementById("btn").remove();
     let edges = [];
 
     try {
