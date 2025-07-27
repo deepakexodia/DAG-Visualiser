@@ -70,6 +70,49 @@ const edgeProto = {
     }
 };
 
+function topologicalSort(edges) {
+    const graph = {};
+
+    // Build graph (only approved edges)
+    edges.forEach(([src, dest, approved]) => {
+        if (!graph[src]) graph[src] = [];
+        if (!graph[dest]) graph[dest] = [];
+        if (approved) {
+            graph[src].push(dest);
+        }
+    });
+
+    const visited = new Set();
+    const visiting = new Set();
+    const result = [];
+
+    function dfs(node) {
+        if (visiting.has(node)) {
+            throw new Error("Cycle detected in the graph!");
+        }
+        if (visited.has(node)) return;
+
+        visiting.add(node);
+
+        graph[node].forEach((neighbor) => {
+            dfs(neighbor);
+        });
+
+        visiting.delete(node);
+        visited.add(node);
+        result.push(node);
+    }
+
+    // Call DFS for all nodes
+    Object.keys(graph).forEach((node) => {
+        if (!visited.has(node)) {
+            dfs(node);
+        }
+    });
+
+    return result.reverse(); // reverse for topological order
+}
+
 const centerX = document.documentElement.clientWidth / 2;
 let nodes = [];
 ["a", "b", "c", "d"].forEach((txt) => {
