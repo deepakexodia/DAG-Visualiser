@@ -1,7 +1,7 @@
 const nodeProto = {
     x: 0,
     y: 0,
-    r: 20,
+    r: 0,
     txt: "",
     draw: function () {
         const el = document.createElement("div");
