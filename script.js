@@ -129,8 +129,8 @@ try {
 
 //draw nodes
 let sortedNodes = topologicalSort(edges);
+const centerX = document.documentElement.clientWidth / 2;
 for (let i = 0; i < sortedNodes.length; i++) {
-    const centerX = document.documentElement.clientWidth / 2;
     const r = 20;
     const x = centerX;
     const gap = 20;
