@@ -107,6 +107,11 @@ const edgeProto1 = {
             node1.textContent = txt1;
             node2.textContent = txt2;
         }
+    },
+    erase: function () {
+        arc.classList.remove(this.direction ? "right-half-circle" : "left-half-circle");
+        node1.classList.remove("circle");
+        node2.classList.remove("circle");
     }
 };
 
