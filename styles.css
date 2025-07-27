@@ -11,12 +11,12 @@
     border: 1px solid black;
     border-radius: 50%;
     position: absolute;
-    clip-path: inset(0 50% 0 0);
+    clip-path: inset(0 0 0 50%);
 }
 
 .left-half-circle {
     border: 1px solid black;
     border-radius: 50%;
     position: absolute;
-    clip-path: inset(0 0 0 50%);
+    clip-path: inset(0 50% 0 0);
 }
