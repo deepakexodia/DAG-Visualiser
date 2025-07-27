@@ -62,12 +62,11 @@ const edgeProto = {
         const x = Math.abs(x1 - x2) / 2;
         const y = Math.abs(y1 - y2) / 2;
         const r = Math.sqrt(Math.pow(Math.abs(x1 - x2), 2) + Math.pow(Math.abs(y1 - y2), 2));
-        el.classList.add("circle");
+        el.classList.add(this.direction ? "right-half-circle" : "left-half-circle");
         el.style.height = `${2 * r}px`;
         el.style.width = `${2 * r}px`;
         el.style.left = `${x - r}px`;
         el.style.top = `${y - r}px`;
-        el.style.clipPath = this.direction ? "inset(0 0 0 50%)" : "inset(0 50% 0 0)";
     }
 };
 
