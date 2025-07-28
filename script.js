@@ -119,6 +119,7 @@ function generateDagDiagram() {
                 }
             }
         }
+        document.getElementById("title").remove();
         document.getElementById("dagJsonInput").remove();
         document.getElementById("btn").remove();
     } catch (e) {
