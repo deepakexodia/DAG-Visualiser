@@ -60,12 +60,10 @@ function topologicalSort(edges) {
     const graph = {};
 
     // Build graph (only approved edges)
-    edges.forEach(([src, dest, approved]) => {
+    edges.forEach(([src, dest, _]) => {
         if (!graph[src]) graph[src] = [];
         if (!graph[dest]) graph[dest] = [];
-        if (approved) {
-            graph[src].push(dest);
-        }
+        graph[src].push(dest);
     });
 
     const visited = new Set();
